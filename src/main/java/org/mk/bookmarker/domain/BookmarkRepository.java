@@ -8,8 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 public interface
 BookmarkRepository extends JpaRepository<Bookmark, Long> {
   @Query("SELECT new org.mk.bookmarker.domain.BookmarkDTO(b.id, b.title, b.url, b.createdAt) FROM" +
-                 " " +
-                 "Bookmark b ORDER BY b" +
-                 ".createdAt DESC")
+                 " Bookmark b")
   Page<BookmarkDTO> findBookmarks(Pageable pageable);
+
+  @Query("""
+    SELECT new org.mk.bookmarker.domain.BookmarkDTO(b.id, b.title, b.url, b.createdAt)
+    FROM Bookmark b
+    WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :query, '%'))
+  """)
+  Page<BookmarkDTO> searchBookmarks(String query, Pageable pageable);
 }
