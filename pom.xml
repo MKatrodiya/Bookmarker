@@ -131,7 +131,7 @@
                 <configuration>
                     <image>
                         <name>
-                            meetk/bookmarker
+                            mkatrodiya/bookmarker
                         </name>
                     </image>
                     <excludes>
@@ -151,7 +151,7 @@
                         <image>eclipse-temurin:21-jre</image>
                     </from>
                     <to>
-                        <image>meetk/bookmarker-jib</image>
+                        <image>mkatrodiya/bookmarker-jib</image>
                         <tags>
                             <tag>latest</tag>
                             <tag>0.0.01</tag>
