@@ -17,4 +17,6 @@ BookmarkRepository extends JpaRepository<Bookmark, Long> {
     WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :query, '%'))
   """)
   Page<BookmarkDTO> searchBookmarks(String query, Pageable pageable);
+
+  Page<BookmarkDTO> findByTitleContainsIgnoreCase(String query, Pageable pageable);
 }
