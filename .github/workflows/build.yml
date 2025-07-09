@@ -40,4 +40,4 @@ jobs:
         name: Build and push Docker image
         run: |
           ./mvnw clean package jib:dockerBuild -DskipTests
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmarker-api
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/bookmarker-jib
