@@ -13,11 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,5 +86,37 @@ class BookmarkControllerTest {
        .andExpect(jsonPath("$.isLastPage", CoreMatchers.equalTo(isLastPage)))
        .andExpect(jsonPath("$.hasNextPage", CoreMatchers.equalTo(hasNextPage)))
        .andExpect(jsonPath("$.hasPreviousPage", CoreMatchers.equalTo(hasPreviosPage)));
+  }
+
+  @Test
+  void shouldCreateBookmarkSuccessfully() throws Exception {
+    String newBookmarkJson = """
+            {
+                "title": "New Bookmark",
+                "url": "https://example.com/new-bookmark"
+            }
+            """;
+
+    mvc.perform(MockMvcRequestBuilders.post("/api/bookmarks")
+            .contentType("application/json")
+            .content(newBookmarkJson))
+       .andExpect(status().isCreated())
+       .andExpect(jsonPath("$.id", notNullValue()))
+       .andExpect(jsonPath("$.title", CoreMatchers.equalTo("New Bookmark")))
+       .andExpect(jsonPath("$.url", CoreMatchers.equalTo("https://example.com/new-bookmark")));
+  }
+
+  @Test
+  void shouldFailToCreateWhenTitleIsMissing() throws Exception {
+    String newBookmarkJson = """
+            {
+                "url": "https://example.com/new-bookmark"
+            }
+            """;
+
+    mvc.perform(MockMvcRequestBuilders.post("/api/bookmarks")
+            .contentType("application/json")
+            .content(newBookmarkJson))
+       .andExpect(status().isBadRequest());
   }
 }
